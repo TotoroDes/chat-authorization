@@ -1,0 +1,38 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport"
+          content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Chat</title>
+    <link rel="stylesheet" href="/styles/Form.css">
+</head>
+<body>
+<div class="authorization">
+<a href="/login" class="send submit-login" type="submit">Login</a>
+<a href="/registration" class="send submit-registration" type="submit">Registration</a>
+</div>
+<ul id="chatHistory">
+    <% chatMessages.forEach(function(message){ %>
+    <%- include('chat/message', {message: message}); %>
+    <% }); %>
+</ul>
+
+<form action="/chat" class="Form-chat" method="post">
+    <fieldset>
+        <div class="Form-field">
+            <input type="text" name="message[author]" placeholder="Author">
+        </div>
+        <div class="Form-field">
+            <textarea name="message[text]" id="messageText" cols="30" rows="5" placeholder="Message"></textarea>
+        </div>
+        <button class="send submit-chat" type="submit">Send</button>
+    </fieldset>
+</form>
+<script src="/scripts/Authorization.js"></script>
+<script src="/scripts/ChatForm.js"></script>
+<script src="/scripts/ChatHistory.js"></script>
+<script src="/scripts/app.js"></script>
+</body>
+</html>

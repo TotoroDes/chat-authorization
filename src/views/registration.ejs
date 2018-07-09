@@ -1,0 +1,33 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport"
+          content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Login</title>
+    <link rel="stylesheet" href="/styles/Form.css">
+</head>
+<body>
+
+<% if (errors) { %>
+<p><%= errors.join('<br/>') %></p>
+<% } %>
+<div class="authorization">
+       <form action="/registration" class="Form-login" method="post">
+        <div class="Form-field">
+            <input type="email"  name="email" id="authorLogin" placeholder="Login">
+        </div>
+        <div class="Form-field">
+            <input type="password"  name="password" id="authorPassword" placeholder="Password">
+        </div>
+        <div class="Form-field">
+            <input type="password"  name="passwordConfirm" id="authorPasswordConfirm" placeholder="Password">
+        </div>
+        <button class="send submit-registration" type="submit">Registration</button>
+    </form>
+</div>
+<script src="/scripts/Authorization.js"></script>
+<script src="/scripts/app.js"></script>
+</body>
+</html>
