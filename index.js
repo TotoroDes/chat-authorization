@@ -12,6 +12,7 @@ const server = http.createServer(app);
 const chatMessages = [];
 const chatUsers = [];
 let clients = [];
+const sessions = {};
 
 app.use(express.json());
 app.use(express.urlencoded({
@@ -118,6 +119,9 @@ app.post('/login', (req, res) => {
         res.cookie('isLoggedIn', 'true', {
             httpOnly: true,
         });
+
+      const sessionId = UUID();
+      sessions[sessionId] = user.email;
 
         res.redirect('/chat-login');
     }

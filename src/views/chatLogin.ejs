@@ -9,7 +9,10 @@
     <link rel="stylesheet" href="/styles/Form.css">
 </head>
 <body>
-<h2>Hello </h2>
+<h2>Hello
+    <% if (user) { %>
+    <p><%= user.email %></p>
+    <% } %></h2>
 
 <div class="authorization">
     <button class="send submit-exit" type="submit">Exit</button>
@@ -26,7 +29,9 @@
 <form action="/chat" class="Form-chat" method="post">
     <fieldset>
         <div class="Form-field">
-            <strong></strong>
+            <strong><% if (user) { %>
+                <p><%= user.email %></p>
+                <% } %></strong>
         </div>
         <div class="Form-field">
             <textarea name="message[text]" id="messageText" cols="30" rows="5" placeholder="Message"></textarea>
