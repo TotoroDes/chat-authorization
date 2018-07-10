@@ -9,13 +9,18 @@
     <link rel="stylesheet" href="/styles/Form.css">
 </head>
 <body>
+
+<% if (errors) { %>
+<p><%= errors.join('<br/>') %></p>
+<% } %>
+
 <div class="authorization">
     <form action="/login" class="Form-login" method="post">
         <div class="Form-field">
-            <input type="email"  name="message[email]" id="authorLogin" placeholder="Login">
+            <input type="email"  name="email" id="authorLogin" placeholder="Login">
         </div>
         <div class="Form-field">
-            <input type="password"  name="message[password]" id="authorPassword" placeholder="Password">
+            <input type="password"  name="password" id="authorPassword" placeholder="Password">
         </div>
         <button class="send submit-login" type="submit">Login</button>
     </form>

@@ -9,21 +9,24 @@
     <link rel="stylesheet" href="/styles/Form.css">
 </head>
 <body>
-<h2>Hello <% if (userEmail) { %>
-    <p><%= userEmail.join('') %></p>
-    <% } %></h2>
+<h2>Hello </h2>
+
+<div class="authorization">
+    <button class="send submit-exit" type="submit">Exit</button>
+</div>
+
+
 <ul id="chatHistory">
     <% chatMessages.forEach(function(message){ %>
     <%- include('chat/message', {message: message}); %>
     <% }); %>
 </ul>
 
+
 <form action="/chat" class="Form-chat" method="post">
     <fieldset>
         <div class="Form-field">
-            <strong><% if (userEmail) { %>
-                <p><%= userEmail.join('') %></p>
-                <% } %> </strong>
+            <strong></strong>
         </div>
         <div class="Form-field">
             <textarea name="message[text]" id="messageText" cols="30" rows="5" placeholder="Message"></textarea>

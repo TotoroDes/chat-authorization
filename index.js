@@ -23,7 +23,7 @@ app.use(express.static('public'));
 
 app.locals.errors = [];
 app.locals.userEmail = [];
-
+app.locals.user = {};
 
 app.set('view engine', 'ejs');
 app.set('views', './src/views');
@@ -41,13 +41,15 @@ app.get('/', (req, res) => {
 });
 
 app.get('/chat-login', (req, res) => {
-    res.cookie('isLoggedIn', 'true', {
-        httpOnly: true,
-    });
+    if (req.cookies.isLoggedIn === 'true') {
+        res.render('chatLogin', {
+            chatMessages,
+        });
+    }
+    else {
+        res.redirect('/');
+    }
 
-    res.render('chatLogin', {
-        chatMessages,
-    });
 });
 
 app.get('/login', (req, res) => {
@@ -67,21 +69,56 @@ app.get('/chat/new_message', (req, res) => {
     clients.push(res);
 });
 
-app.post('/login', (req, res) => {
-    const {email, password} = req.body;
 
-    res.redirect('/chat-login');
-});
 
 app.post('/registration', (req, res) => {
     const {email, password, passwordConfirm} = req.body;
-    if(password !== passwordConfirm){
-        res.render('registration', {
-            errors: ["Password don't match!"],
+    const errors = [];
+    const hasUser = chatUsers.some((userRecord) => {
+        return userRecord.email === email;
+    });
 
+    if (hasUser) {
+        errors.push('This user already exists!');
+    }
+
+    if (password !== passwordConfirm) {
+        errors.push('Password does not match!');
+    }
+
+    if (errors.length) {
+        return res.render('registration', {
+            errors,
         });
     }
-    else{
+
+    else {
+            chatUsers.push({
+            email,
+            password,
+        });
+
+        res.redirect('/login');
+    }
+
+});
+
+app.post('/login', (req, res) => {
+    const {email, password} = req.body;
+    const user = chatUsers.find((userRecord) => {
+        return userRecord.email === email && userRecord.password === password;
+    });
+
+    if (typeof user === 'undefined') {
+        res.render('login', {
+            errors: ['This user does not exist'],
+        });
+    }
+    else {
+        res.cookie('isLoggedIn', 'true', {
+            httpOnly: true,
+        });
+
         res.redirect('/chat-login');
     }
 
