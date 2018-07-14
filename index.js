@@ -5,6 +5,7 @@ const logger = require('./src/utils/logger');
 const multer = require('multer');
 const upload = multer();
 const cookieParser = require('cookie-parser');
+const session = require('express-session');
 
 const app = express();
 const server = http.createServer(app);
@@ -22,8 +23,16 @@ app.use(express.urlencoded({
 app.use(cookieParser());
 app.use(express.static('public'));
 
+app.use(session({
+    secret: 'chat-login-key',
+    resave: false,
+    saveUninitialized: true,
+    cookie: {secure: true}
+}));
+
 app.locals.errors = [];
-app.locals.userEmail = [];
+app.locals.userEmail = '';
+
 app.locals.user = {};
 
 app.set('view engine', 'ejs');
@@ -41,17 +50,6 @@ app.get('/', (req, res) => {
 
 });
 
-app.get('/chat-login', (req, res) => {
-    if (req.cookies.isLoggedIn === 'true') {
-        res.render('chatLogin', {
-            chatMessages,
-        });
-    }
-    else {
-        res.redirect('/');
-    }
-
-});
 
 app.get('/login', (req, res) => {
     res.render('login');
@@ -69,7 +67,6 @@ app.get('/chat', (req, res) => {
 app.get('/chat/new_message', (req, res) => {
     clients.push(res);
 });
-
 
 
 app.post('/registration', (req, res) => {
@@ -94,7 +91,7 @@ app.post('/registration', (req, res) => {
     }
 
     else {
-            chatUsers.push({
+        chatUsers.push({
             email,
             password,
         });
@@ -103,6 +100,16 @@ app.post('/registration', (req, res) => {
     }
 
 });
+
+app.post('/chat-login', (req, res) => {
+
+    res.clearCookie('isLoggedIn');
+    res.clearCookie('SESSION_ID');
+    return res.status(200).redirect('/');
+
+});
+
+
 
 app.post('/login', (req, res) => {
     const {email, password} = req.body;
@@ -120,14 +127,26 @@ app.post('/login', (req, res) => {
             httpOnly: true,
         });
 
-      const sessionId = UUID();
-      sessions[sessionId] = user.email;
-
+        const sessionId = UUID();
+        sessions[sessionId] = user.email;
+        res.cookie('SESSION_ID', sessionId);
+        req.session.userEmail = user.email;
         res.redirect('/chat-login');
     }
 
 });
 
+app.get('/chat-login', (req, res) => {
+    if (req.cookies.isLoggedIn === 'true') {
+        res.render('chatLogin', {
+            chatMessages,
+        });
+    }
+    else {
+        res.redirect('/');
+    }
+
+});
 
 app.post('/chat', upload.fields([]), (req, res) => {
     const msg = Object.assign({
