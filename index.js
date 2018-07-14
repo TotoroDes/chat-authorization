@@ -31,7 +31,7 @@ app.use(session({
 }));
 
 app.locals.errors = [];
-app.locals.userEmail = '';
+app.locals.userEmail = [];
 
 app.locals.user = {};
 
@@ -127,10 +127,13 @@ app.post('/login', (req, res) => {
             httpOnly: true,
         });
 
+        const userEmail = [];
+
         const sessionId = UUID();
         sessions[sessionId] = user.email;
         res.cookie('SESSION_ID', sessionId);
-        req.session.userEmail = user.email;
+        userEmail.push(user.email);
+
         res.redirect('/chat-login');
     }
 
@@ -141,6 +144,7 @@ app.get('/chat-login', (req, res) => {
         res.render('chatLogin', {
             chatMessages,
         });
+
     }
     else {
         res.redirect('/');

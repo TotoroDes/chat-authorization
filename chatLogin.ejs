@@ -11,8 +11,8 @@
 <body>
 <h2>Hello</h2>
 
-<p><% if (user) { %>
-<h2><%= user.email %></h2>
+<p><% if (userEmail) { %>
+<%= userEmail.join('<br/>') %>
 <% } %>
 </p>
 
